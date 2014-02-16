@@ -1,5 +1,9 @@
 RedFlag::Application.routes.draw do
+
+root :to => 'companies#search'
 get 'company_search/:term' => 'api#company_search'
+post 'company_search' => 'api#company_search'
+get 'search' => 'companies#search'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
