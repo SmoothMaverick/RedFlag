@@ -6,6 +6,7 @@ class Company
 	property :market_cap, type: Float
 
   has_n(:competitors).to("Company")
+  has_n(:news)
 
   validates_uniqueness_of :uid
 
