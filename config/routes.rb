@@ -4,6 +4,7 @@ root :to => 'companies#search'
 get 'company_search/:term' => 'companies#company_search'
 post 'company_search' => 'companies#company_search'
 get 'search' => 'companies#search'
+get 'company_json/:uid' => 'companies#company_json', :as => 'company_json'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
