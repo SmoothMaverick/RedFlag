@@ -7,14 +7,25 @@ class DunsServer
     cName  = response["resultSet"]["hit"].first["companyResults"]["companyName"]	
     cId  = response["resultSet"]["hit"].first["companyResults"]["companyId"]	
 
-    Company.create(name:cName,uid:cId)
+		company = Company.find(uid: cId)
+    company ||= Company.create(name:cName,uid:cId)
+  end
 
-    #query company news
+  def self.competitor_search(company)
+		#query competitors
+		response = HTTParty.get("http://dnbdirect-api.dnb.com/DnBAPI-13/rest/company/#{company.uid}/competitors?top_competitors=false", :headers => { "Username" => "api3322", "Password" => "welcome", "Api-Key" => "m8z88pw4899qgt8uv7w7779g"})
+	
+	competitorsArray = response["competitor"]
 
+	competitorsArray[0..5].each do |item|
+		name = item["companyName"]
+		uid = item["companyId"]
+		competitor = Company.find(uid: uid)
+    competitor ||= Company.create(name: name,uid: uid)
+		company.competitors << competitor if competitor
+	end	
 
-    #query competititors
-
-    #query competitor news
+	return competitorsArray
 
   end
   def self.news_search(company)
