@@ -8,7 +8,7 @@
 
 .node text {
   pointer-events: none;
-  font: 10px sans-serif;
+  font: 30px sans-serif;
 }
 
 </style>
@@ -18,17 +18,17 @@
 
 var color = d3.scale.category20();
 
-var width = 960,
-    height = 500
+var width = 1400,
+    height = 600
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
 var force = d3.layout.force()
-    .gravity(.05)
-    .distance(100)
-    .charge(-100)
+    // .gravity(.05)
+    .distance(200)
+    .charge(-1400)
     .size([width, height]);
 
 d3.json("<%= company_json_path(@company.uid) %>", function(error, json) {
@@ -50,7 +50,7 @@ d3.json("<%= company_json_path(@company.uid) %>", function(error, json) {
 
   node.append("circle")
       .attr("class", "node")
-      .attr("r", 50)
+      .attr("r", 20)
       .style("fill", function(d) { return color(d.group); })
       .call(force.drag);
 
@@ -62,8 +62,9 @@ d3.json("<%= company_json_path(@company.uid) %>", function(error, json) {
   //     .attr("height", 16);
 
   node.append("text")
-      // .attr("dx", 12)
+      .attr("dx", 20)
       .attr("dy", ".4em")
+      // .style("text-anchor", "middle")
       .text(function(d) { return d.name });
 
   force.on("tick", function() {
