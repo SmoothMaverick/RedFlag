@@ -51,6 +51,9 @@ GEM
     coffee-script-source (1.7.0)
     erubis (2.7.0)
     execjs (2.0.2)
+    figaro (0.7.0)
+      bundler (~> 1.0)
+      rails (>= 3, < 5)
     hike (1.2.3)
     httparty (0.13.0)
       json (~> 1.8)
@@ -135,6 +138,7 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 4.0.0)
+  figaro
   httparty
   jbuilder (~> 1.2)
   jquery-rails
