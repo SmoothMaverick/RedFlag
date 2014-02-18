@@ -20,12 +20,12 @@ class DunsServer
   def self.competitor_search(company)
     return nil unless company
     response = self.get("/company/#{company.uid}/competitors", 
-                        query: { top_competitors: false })
+                        query: { top_competitors: true })
 
     competitors = response["competitor"] rescue nil
 
     if competitors 
-      competitors_limit = [competitors.count, 4].max
+      competitors_limit = [competitors.count, 4].min
 
       competitors[0..competitors_limit].each do |item|
         name = item["companyName"]
@@ -52,7 +52,7 @@ class DunsServer
     news_articles = response["companyNews"]["newsItems"]["newsItem"] rescue nil
 
     if news_articles
-      news_limit = [news_articles.count, 19].max
+      news_limit = [news_articles.count, 19].min
       news_articles[0..news_limit].each do |item|
         if news = News.find(link: item["link"])
           news.companies << company
