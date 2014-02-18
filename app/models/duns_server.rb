@@ -26,23 +26,30 @@ class DunsServer
 	return competitorsArray
 
   end
+
   def self.news_search(company)
     response = HTTParty.get("http://dnbdirect-api.dnb.com/DnBAPI-13/rest/company/#{company.uid}/news?start_date=2014-01-01&end_date=2014-02-01&filter=GeneralIndustry", :headers => { "Username" => "api3322", "Password" => "welcome", "Api-Key" => "m8z88pw4899qgt8uv7w7779g"})
 
     newsArray  = response["companyNews"]["newsItems"]["newsItem"]	
 
-    newsArray[0..20].each do |item|
-      news = News.new
-      news.title = item["title"]
-      news.text = item["text"]
-      news.source = item["source"]
-      news.link = item["link"]
-      news.date = item["date"]
-      if news.save
+    news_limit = [newsArray.count, 19].max
+    newsArray[0..news_limit].each do |item|
+      if news = News.find(link: item["link"])
         news.companies << company
+      else
+        news = News.new
+        news.title = item["title"]
+        news.text = item["text"]
+        news.source = item["source"]
+        news.link = item["link"]
+        news.date = item["date"]
+        if news.save
+          news.companies << company
+        end
       end
     end
   end
+
   def self.marketcap_search(company)
 		response = HTTParty.get("http://dnbdirect-api.dnb.com/DnBAPI-13/rest/company/#{company.uid}/market/data", :headers => { "Username" => "api3322", "Password" => "welcome", "Api-Key" => "m8z88pw4899qgt8uv7w7779g"})
 
