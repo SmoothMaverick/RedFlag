@@ -1,0 +1,14 @@
+!!!
+%html
+  %head
+    %title Redflag
+    %meta{ :content => "width=device-width, initial-scale=1.0", :name => "viewport" }
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+  %body
+    .site-wrapper
+      .site-wrapper-inner
+        .cover-container
+          .inner.cover
+            = yield

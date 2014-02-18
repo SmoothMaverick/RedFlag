@@ -26,6 +26,9 @@ gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
+gem 'bootstrap-sass'
+gem 'haml-rails'
+gem 'd3_rails'
 
 gem 'neo4j', github: "andreasronge/neo4j"
 

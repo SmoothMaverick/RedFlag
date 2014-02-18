@@ -1,9 +1,7 @@
 RedFlag::Application.routes.draw do
 
-root :to => 'companies#search'
-get 'company_search/:term' => 'companies#company_search'
-post 'company_search' => 'companies#company_search'
-get 'search' => 'companies#search'
+root :to => 'companies#index'
+get 'graph' => 'companies#graph'
 get 'company_json/:uid' => 'companies#company_json', :as => 'company_json'
 
   # The priority is based upon order of creation: first created -> highest priority.

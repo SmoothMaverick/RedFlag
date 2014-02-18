@@ -41,6 +41,8 @@ GEM
       tzinfo (~> 0.3.37)
     arel (4.0.2)
     atomic (1.1.14)
+    bootstrap-sass (3.1.1.0)
+      sass (~> 3.2)
     builder (3.1.4)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
@@ -49,11 +51,20 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    d3_rails (3.4.1)
+      railties (>= 3.1.0)
     erubis (2.7.0)
     execjs (2.0.2)
     figaro (0.7.0)
       bundler (~> 1.0)
       rails (>= 3, < 5)
+    haml (4.0.5)
+      tilt
+    haml-rails (0.5.3)
+      actionpack (>= 4.0.1)
+      activesupport (>= 4.0.1)
+      haml (>= 3.1, < 5.0)
+      railties (>= 4.0.1)
     hike (1.2.3)
     httparty (0.13.0)
       json (~> 1.8)
@@ -137,8 +148,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bootstrap-sass
   coffee-rails (~> 4.0.0)
+  d3_rails
   figaro
+  haml-rails
   httparty
   jbuilder (~> 1.2)
   jquery-rails
