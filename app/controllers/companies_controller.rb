@@ -7,6 +7,7 @@ class CompaniesController < ApplicationController
     news = DunsServer.news_search(@company)
     competitor = DunsServer.competitor_search(@company)
     # marketcap = DunsServer.marketcap_search(@company)
+    tweets = Twitter.company_search(@company)
   end
 
   def company_json
