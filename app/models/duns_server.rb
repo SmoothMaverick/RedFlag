@@ -5,6 +5,34 @@ class DunsServer
   headers "password" => ENV['DUNS_PASSWORD']
   headers "API-KEY"  => ENV['DUNS_KEY']
 
+  DEFAULT_COMPETITOR_LIMIT = 5
+  DEFAULT_NEWS_LIMIT = 20
+
+  # Only stores news or tweets if competitors also have it.
+  def self.company_crawl(term, options = {})
+    company = company_search(term)
+    competitors = competitor_search(company, limit: options[:limit])
+    main_company_news = news_search(company, limit: options[:limit] * 10)
+
+    # Start crawling.through each competitor
+    # See what news already exists in main company's news.
+    news_matches = []
+    competitors.each do |c|
+      competitor_news = news_search(c)
+      competitor_news.each do |cnews|
+        news_matches << cnews if main_company_news.include? cnews
+      end
+    end
+
+    # Demo purposes only:
+    # Delete news articles that are not in news matches.
+    # AKA: Only keep matches.
+    main_company_news.each do |mcnews|
+      mcnews.destroy unless news_matches.include? mcnews
+    end
+    company
+  end
+
   def self.company_search(term)
     response = self.get "/search/company/#{term}"
 
@@ -17,7 +45,7 @@ class DunsServer
     end
   end
 
-  def self.competitor_search(company)
+  def self.competitor_search(company, options = {})
     return nil unless company
     response = self.get("/company/#{company.uid}/competitors", 
                         query: { top_competitors: true })
@@ -25,7 +53,8 @@ class DunsServer
     competitors = response["competitor"] rescue nil
 
     if competitors 
-      competitors_limit = [competitors.count, 4].min
+      limit = options[:limit] || DEFAULT_COMPETITOR_LIMIT - 1 # accounts for array position
+      competitors_limit = [competitors.count, limit].min
 
       competitors[0..competitors_limit].each do |item|
         name = item["companyName"]
@@ -35,10 +64,10 @@ class DunsServer
         company.competitors << competitor if competitor
       end
     end
-    competitors
+    company.competitors
   end
 
-  def self.news_search(company)
+  def self.news_search(company, options = {})
     return nil unless company
     start_date = DateTime.yesterday.strftime("%Y-%m-%d")
     end_date = DateTime.now.strftime("%Y-%m-%d")
@@ -52,7 +81,9 @@ class DunsServer
     news_articles = response["companyNews"]["newsItems"]["newsItem"] rescue nil
 
     if news_articles
-      news_limit = [news_articles.count, 19].min
+      saved_articles = []
+      limit = options[:limit] || DEFAULT_NEWS_LIMIT - 1 # accounts for array position
+      news_limit = [news_articles.count, limit].min
       news_articles[0..news_limit].each do |item|
         if news = News.find(link: item["link"])
           news.companies << company
@@ -67,8 +98,10 @@ class DunsServer
             news.companies << company
           end
         end
+        saved_articles << news
       end
     end
+    saved_articles
   end
 
   def self.marketcap_search(company)
