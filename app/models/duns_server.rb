@@ -10,11 +10,15 @@ class DunsServer
 
     company_name = response["resultSet"]["hit"].first["companyResults"]["companyName"] rescue nil
     company_id = response["resultSet"]["hit"].first["companyResults"]["companyId"] rescue nil
-    company = Company.find(uid: company_id)
-    company ||= Company.create(name:company_name, uid: company_id)
+
+    if company_name || company_id
+      company = Company.find(uid: company_id)
+      company ||= Company.create(name:company_name, uid: company_id)
+    end
   end
 
   def self.competitor_search(company)
+    return nil unless company
     response = self.get("/company/#{company.uid}/competitors", 
                         query: { top_competitors: false })
 
@@ -35,6 +39,7 @@ class DunsServer
   end
 
   def self.news_search(company)
+    return nil unless company
     start_date = DateTime.yesterday.strftime("%Y-%m-%d")
     end_date = DateTime.now.strftime("%Y-%m-%d")
     news_filter = "GeneralIndustry"
@@ -67,6 +72,7 @@ class DunsServer
   end
 
   def self.marketcap_search(company)
+    return nil unless company
     response = self.get "/company/#{company.uid}/market/data"
     marketcap = response["currentInformation"]["marketCap"] rescue nil
     company.market_cap = marketcap
